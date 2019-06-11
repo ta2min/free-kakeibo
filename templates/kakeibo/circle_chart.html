@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block page_title %}カテゴリ毎の合計金額{% endblock %}
+
+{% block extra_css %}
+<style type="text/css">
+</style>
+{% endblock %}
+{% block content %}
+<h3>家計簿アプリ（カテゴリ毎の支出割合）</h3>
+<form class="ui form" method="post">
+    {% csrf_token %}
+    {{ form }}
+   <button class="ui button" type="submit">登録</button>
+</form>
+<canvas id="CircleChart"></canvas>
+<table id="kakeibo_list", class="ui celled table">
+    <thead>
+        <tr>
+            <th>収支</th>
+            <th>日付</th>
+            <th>カテゴリ</th>
+            <th>金額</th>
+            <th>メモ</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in kakeibo_list %}
+            <tr>
+                {% if item.category.balance_label %}
+                    <td data-label="収支">収入</td>
+                {% else %}
+                    <td data-label="収支">支出</td>
+                {% endif %}
+                <td data-label="日付">{{ item.date }}</td>
+                <td data-label="カテゴリ">{{ item.category }}</td>
+                <td data-label="金額">{{ item.money }}</td>
+                <td data-label="メモ">{{ item.memo }}</td>
+                <td data-label="">
+                    <a href="{% url 'kakeibo:update' item.pk %}">
+                        <button class="ui primary button">更新</button>
+                    </a>
+                    <a href="{% url 'kakeibo:delete' item.pk %}">
+                        <button class="ui negative button">削除</button>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<script type="text/javascript" src="https://github.com/nagix/chartjs-plugin-colorschemes/releases/download/v0.2.0/chartjs-plugin-colorschemes.min.js"></script>
+<script>
+         var ctx = document.getElementById('CircleChart').getContext('2d');
+         var data = [
+                     [
+                      {% for key, value in category_dict.items%}
+                       '{{key}}',
+                      {% endfor %}
+                     ],
+                    
+                     [
+                     {% for key, value in category_dict.items%}
+                        {{value}},
+                     {% endfor %}
+                     ]]
+         var myChart = new Chart(ctx, {
+           type: 'pie',
+   
+           data: {
+             labels: data[0],
+             datasets: [{
+               data:  data[1]
+             },
+           ] }
+         });
+   </script>
+   <script>
+   $('#id_year_month_day').hide();
+   </script
+{% endblock %}

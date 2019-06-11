@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block page_title %}データー登録{% endblock %}
+
+{% block extra_css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+    <form class="ui form" method="POST">
+        {% csrf_token %}
+        <div class="field">
+            <label>日付</label>
+            {{ form.date }}
+        </div>
+        <div class="field">
+            <label>カテゴリ</label>
+            {{ form.category }}
+        </div>
+        <div class="field">
+            <label>金額</label>
+            {{ form.money }}
+        </div>
+        <div class="field">
+            <label>メモ</label>
+            {{ form.memo }}
+        <button class="ui button" type="submit">登録</button>
+    </form>
+{% endblock %}

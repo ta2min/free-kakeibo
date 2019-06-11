@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% load humanize %}
+<!-- {% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %} -->
+{% block page_title %}家計簿{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/> 
+
+<!-- <style type="text/css">
+    .container > .grid {
+        height: 100%;
+    }
+
+    .table {
+        max-width: 400px;
+    }
+
+    .ui.grid > .column {
+        padding-top: 0.3em !important;
+        padding-bottom: 0.3em !important;
+    }
+
+    p.red.message {
+        color: #db2828;
+        margin: 0.8em 0 0 0.8em;
+        text-align: left;
+    }
+</style> -->
+{% endblock %}
+
+{% block content %}
+    <h3>家計簿アプリ</h3>
+<a href="{% url 'kakeibo:add' %}?balance_label=0">
+    <button class="large ui basic red button">支出登録</button>
+</a>
+<a href="{% url 'kakeibo:add' %}?balance_label=1">
+    <button class="large ui basic blue button">収入登録</button>
+</a>
+<a href="{% url 'kakeibo:add_category' %}">
+<button class="large ui basic orange button">カテゴリ追加</button>
+</a>
+<br>
+<table id="kakeibo_list", class="ui celled table">
+    <thead>
+        <tr>
+            <th>収支</th>
+            <th>日付</th>
+            <th>カテゴリ</th>
+            <th>金額</th>
+            <th>メモ</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in kakeibo_list %}
+            <tr>
+                {% if item.category.balance_label %}
+                    <td data-label="収支">収入</td>
+                {% else %}
+                    <td data-label="収支">支出</td>
+                {% endif %}
+                <td data-label="日付">{{ item.date }}</td>
+                <td data-label="カテゴリ">{{ item.category }}</td>
+                <td data-label="金額">{{ item.money }}</td>
+                <td data-label="メモ">{{ item.memo }}</td>
+                <td data-label="">
+                    <a href="{% url 'kakeibo:update' item.pk %}">
+                        <button class="ui primary button">更新</button>
+                    </a>
+                    <a href="{% url 'kakeibo:delete' item.pk %}">
+                        <button class="ui negative button">削除</button>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+{% block extra_js %}
+<!-- DataTablesのjavascrit読み込み-->
+<script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+
+<script>
+    jQuery(function($){
+      // デフォルトの設定を変更
+      $.extend( $.fn.dataTable.defaults, {
+          language: {
+              url: "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Japanese.json"
+              }
+              });
+      $("#kakeibo_list").DataTable({
+          "searching": true,     //検索機能
+          "paging":   true,      //ページング機能
+          "ordering": true,      //ソート機能
+          "lengthChange": true,  //件数切り替え機能
+          
+          }).columns.adjust().draw();
+          });
+ </script>
+{% endblock %}

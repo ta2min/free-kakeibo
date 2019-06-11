@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block page_title %}データー登録{% endblock %}
+
+{% block extra_css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+    {% if form.errors %}
+        {{ form.non_field_errors }}
+     {% endif %}
+    <form class="ui form" method="POST">
+        {% csrf_token %}
+        <div class="field">
+            <label>カテゴリ名</label>
+            {{ form.category_name }}
+        </div>
+        <div class="field">
+            <label>収支ラベル</label>
+            {% for radiobutton in form.balance_label %}
+                {{ radiobutton }}
+            {% endfor %}    
+        </div>
+        <button class="ui button" type="submit">登録</button>
+    </form>
+{% endblock %}

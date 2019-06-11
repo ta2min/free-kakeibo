@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block page_title %}データ削除確認{% endblock %}
+
+{% block extra_css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+   <h3>データ削除</h3>
+   <div class="ui segment">
+       <p>{{ object }} のデータを削除しますか?</p>
+       <form method="post">
+           {% csrf_token %}
+           <button class="ui negative button">削除する</button>
+       </form>
+   </div>
+{% endblock %}

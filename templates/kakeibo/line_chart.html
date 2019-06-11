@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block page_title %}カテゴリ毎の合計金額{% endblock %}
+
+{% block extra_css %}
+<style type="text/css">
+</style>
+{% endblock %}
+{% block content %}
+<h3>家計簿アプリ（カテゴリ毎の支出割合）</h3>
+<canvas id="LineChart"></canvas>
+<table id=kakeibo_list width="100%" class="ui table">
+  {% comment %} <thead>
+    <tr style="background-color:rgb(224, 228, 226)">
+      <th class="text-center width=10">日付</th>
+      <th class="text-center">カテゴリ</th>
+      <th class="text-center">合計金額</th>
+    </tr>
+  </thead>
+  <hr>
+  <tbody>
+  {% for date, category, total in matrix_list %}
+    <tr class="odd gradeX text-center">
+      <td class="text-center">{{ date}}</td>
+      <td class="text-center">{{ category }}</td>
+      <td class="text-center">{{ total }}</td>
+      </tr>
+  {% endfor %}
+  </tbody>
+ </table> {% endcomment %}
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<script src="https://github.com/nagix/chartjs-plugin-colorschemes/releases/download/v0.2.0/chartjs-plugin-colorschemes.min.js"></script>
+<script>
+ var ctx = document.getElementById("LineChart").getContext('2d');
+ var DiskChart = new Chart(ctx, {
+ type: 'line',
+   data: {
+     labels:[
+       {% for item in x_label %}
+            '{{item}}',
+       {% endfor %}],
+     datasets: [
+     {% for category_name in category_list %}  
+      {
+       label: "{{category_name}}",
+       fill: false,
+       data: [
+       {% for time_label in x_label %}
+         {% for date, category, total in matrix_list %}
+            {% if category == category_name %}
+              {% if date == time_label %}
+               {{ total }},
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+       {% endfor %}
+       ],
+      },
+    {% endfor %}
+   ]
+ },
+      options: {
+       responsive: true,
+       scales: {
+         xAxes: [{
+           scaleLabel: {
+             display: true,
+             labelString: '時間'
+           },
+           ticks: {
+               maxRotation:0,
+               minRotation:0 
+             },
+           }],
+           yAxes: [{
+             scaleLabel: {
+               display: true,
+               labelString: '合計金額（円）'
+             },
+           ticks:{
+             min: 0,   // 最小値
+             }
+            }],
+          },
+         title: {
+           display: true,      
+           pocision: "top",
+           fontSize: 30,
+           fontColor: "black",
+           text: "カテゴリ別合計金額推移"
+         },
+    }
+});
+</script>
+{% endblock %}
