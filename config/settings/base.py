@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
-
+from datetime import timedelta
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -41,7 +41,10 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'django_cleanup',
     'bootstrap4',
+    'rest_framework',
+    'djoser',
     'kakeibo',
+    'api',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +77,20 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+}
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
