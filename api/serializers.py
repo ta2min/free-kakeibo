@@ -14,7 +14,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'category_name', 'user')
+        fields = ('id', 'category_name', 'balance_label', 'user')
         validators = [
             # カテゴリ名とユーザがユニークになっていることをチェック
             UniqueTogetherValidator(
