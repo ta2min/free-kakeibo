@@ -24,7 +24,7 @@ class KakeiboListView(LoginRequiredMixin, ListView):
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
-        queryset = user.kakeibo_set.all()
+        queryset = user.kakeibo_set.select_related('category')
         context = {
             'kakeibo_list': queryset,
         }
@@ -89,7 +89,7 @@ class CircleChartView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user = self.request.user
         first_date, last_date = self.get_month_first_and_last_date(timezone.now().year, timezone.now().month)
-        current_month_kakeibo_list = user.kakeibo_set.filter(category__balance_label=EXPENSE, date__range=(first_date, last_date)
+        current_month_kakeibo_list = user.kakeibo_set.select_related('category').filter(category__balance_label=EXPENSE, date__range=(first_date, last_date)
                                                             ).order_by('-date')
 
         total = sum([item.money for item in current_month_kakeibo_list])
