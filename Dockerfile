@@ -4,4 +4,3 @@ RUN mkdir /code
 WORKDIR /code
 COPY ./requirements /code/
 RUN pip install -r local.txt
-COPY . /code
