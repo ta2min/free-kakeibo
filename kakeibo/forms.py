@@ -1,6 +1,7 @@
 from django import forms
 from django.utils import timezone
-from .models import Kakeibo, Category
+from .models import Kakeibo, Category, Family
+from accounts.models import CustomUser
 
 
 class KakeiboForm(forms.ModelForm):
@@ -64,3 +65,15 @@ class SelectYearAndMonthForm(forms.Form):
     balance_label = forms.ChoiceField(widget=forms.Select, choices=BALANCE_LABEL_CHOICES)
 
 
+class FamilyForm(forms.ModelForm):
+    class Meta:
+        model = Family
+        fields = ['name']
+
+class EmailForm(forms.Form):
+    email = forms.EmailField(label='メールアドレス')
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        if not CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError('存在しないユーザのメールアドレスです。')

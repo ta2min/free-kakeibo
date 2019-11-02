@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block page_title %}家族グループ作成{% endblock %}
+
+{% block extra_css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>家族グループ作成</h1>
+    {% if form.errors %}
+        {{ form.non_field_errors }}
+     {% endif %}
+    <form class="ui form" method="POST">
+        {% csrf_token %}
+        <div class="field">
+            <label>家族グループ名</label>
+            {{ form.name }}
+        </div>
+        <button class="ui button" type="submit">作成</button>
+    </form>
+{% endblock %}
