@@ -2,7 +2,7 @@ import calendar
 from datetime import timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import models
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import (
@@ -10,11 +10,18 @@ from django.views.generic import (
     ListView,
     UpdateView,
     DeleteView,
+    FormView,
     View,
 )
-from .models import Category, Kakeibo
-from .forms import KakeiboForm, CategoryForm, SelectYearAndMonthForm
-
+from accounts.models import CustomUser
+from kakeibo.models import Category, Kakeibo, Family, FamilyMember
+from .forms import (
+    KakeiboForm,
+    CategoryForm,
+    SelectYearAndMonthForm,
+    FamilyForm,
+    EmailForm,
+)
 
 EXPENSE = 0
 
@@ -194,3 +201,48 @@ class LineChartView(LoginRequiredMixin, View):
         }
 
         return render(request, 'kakeibo/line_chart.html', context)
+
+
+class FamilyCreateView(LoginRequiredMixin, CreateView):
+    model = Family
+    form_class = FamilyForm
+    success_url = reverse_lazy('kakeibo:family_member_create')
+    template_name = 'kakeibo/family_edit.html'
+
+    def form_valid(self, form):
+        family = form.save()
+        FamilyMember.objects.create(family_id=family, member=self.request.user)
+        return redirect('kakeibo:family_member_create')
+
+
+class FamilyMemverCreateView(LoginRequiredMixin, FormView):
+    form_class = EmailForm
+    template_name = 'kakeibo/family_member_invitation.html'
+    
+    def form_valid(self, form):
+        email = form.cleaned_data.get('email')
+        add_member = CustomUser.objects.get(email=email)
+        family_id = FamilyMember.objects.get(member=self.request.user).family_id
+        FamilyMember.objects.create(family_id=family_id, member=add_member)
+
+        if 'save_and_add' in self.request.POST:
+            return redirect('kakeibo:family_member_create')
+        
+        return redirect('kakeibo:list')
+
+    
+class KakeiboFamilyListView(LoginRequiredMixin, ListView):
+    model = Kakeibo
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        family_members = FamilyMember.objects.filter(family_id=user.familymember_set.get().family_id)
+        q_family_members = models.Q()
+        for member in family_members:
+            q_family_members |= models.Q(user=member.member)
+        family_kakeibo = Kakeibo.objects.filter(q_family_members)
+        context = {
+            'kakeibo_list': family_kakeibo,
+            'user_display': True,
+        }
+        return render(request, 'kakeibo/kakeibo_list.html', context)

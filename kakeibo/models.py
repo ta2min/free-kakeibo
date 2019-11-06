@@ -38,3 +38,25 @@ class Kakeibo(models.Model):
 
     def __str__(self):
         return self.memo
+
+
+class Family(models.Model):
+    
+    class Meta:
+        db_table = 'family'
+    
+    name = models.CharField(max_length=255)
+
+
+class FamilyMember(models.Model):
+    ROLE_CHOICES = {
+            (0, '親'),
+            (1, '子')
+        }
+
+    class Meta:
+        db_table = 'family_member'
+    
+    family_id = models.ForeignKey(Family, on_delete=models.CASCADE)
+    member = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    role = models.IntegerField('役割', choices=ROLE_CHOICES, default=0)

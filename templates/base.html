@@ -31,6 +31,15 @@
                 <a class="item" href="{% url 'kakeibo:kakeibo_line' %}"><h5>カテゴリ別支出推移</h5></a>
             </div>
         </div>
+        <div class="ui simple dropdown item">
+            <h5>家族管理</h5>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+                <a class="item" href="{% url 'kakeibo:family_kakeibo' %}"><h5>家族家計簿</h5></a>
+                <a class="item" href="{% url 'kakeibo:family_create' %}"><h5>家族グループ作成</h5></a>
+                <a class="item" href="{% url 'kakeibo:family_member_create' %}"><h5>メンバー追加</h5></a>
+            </div>
+        </div>
         <a class="item" href="{% url 'accounts:profile' %}">
             <h5>プロフィールの更新</h5>
         </a>

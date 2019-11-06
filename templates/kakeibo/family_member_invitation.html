@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block page_title %}メンバー招待{% endblock %}
+
+{% block extra_css %}
+<style type="text/css">
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>メンバー招待</h1>
+    {% if form.errors %}
+        <div class="ui error message">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+    <form class="ui form" method="POST">
+        {% csrf_token %}
+        <div class="field">
+            <label>メールアドレス</label>
+            {{ form.email }}
+        </div>
+        <button class="ui button" type="submit" name="save_and_add">保存してもう一人追加</button>
+        <button class="ui button" type="submit">追加</button>
+    </form>
+{% endblock %}

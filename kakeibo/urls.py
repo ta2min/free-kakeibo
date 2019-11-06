@@ -12,4 +12,7 @@ urlpatterns = [
     path('add_category', views.CategoryCreateView.as_view(), name='add_category'),
     path('circle/', views.CircleChartView.as_view(), name='kakeibo_circle'),
     path('transition_category', views.LineChartView.as_view(), name='kakeibo_line'),
+    path('family/create', views.FamilyCreateView.as_view(), name='family_create'),
+    path('family/add/', views.FamilyMemverCreateView.as_view(), name='family_member_create'),
+    path('family/', views.KakeiboFamilyListView.as_view(), name='family_kakeibo'),
 ]

@@ -47,6 +47,9 @@
 <table id="kakeibo_list", class="ui celled table">
     <thead>
         <tr>
+            {% if user_display %}
+                <th>ユーザー名</th>
+            {% endif %}
             <th>収支</th>
             <th>日付</th>
             <th>カテゴリ</th>
@@ -58,6 +61,9 @@
     <tbody>
         {% for item in kakeibo_list %}
             <tr>
+                {% if user_display %}
+                    <td>{{ item.user }}</td>
+                {% endif %}
                 {% if item.category.balance_label %}
                     <td data-label="収支">収入</td>
                 {% else %}
