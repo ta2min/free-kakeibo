@@ -231,3 +231,18 @@ class FamilyMemverCreateView(LoginRequiredMixin, FormView):
         return redirect('kakeibo:list')
 
     
+class KakeiboFamilyListView(LoginRequiredMixin, ListView):
+    model = Kakeibo
+
+    def get(self, request, *args, **kwargs):
+        user = self.request.user
+        family_members = FamilyMember.objects.filter(family_id=user.familymember_set.get().family_id)
+        q_family_members = models.Q()
+        for member in family_members:
+            q_family_members |= models.Q(user=member.member)
+        family_kakeibo = Kakeibo.objects.filter(q_family_members)
+        context = {
+            'kakeibo_list': family_kakeibo,
+            'user_display': True,
+        }
+        return render(request, 'kakeibo/kakeibo_list.html', context)
