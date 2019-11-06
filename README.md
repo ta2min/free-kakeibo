@@ -35,7 +35,10 @@ conohaのVPSにNginxでデプロイしています。
 ### 開発環境構築
 
 ``` shell
+# 初回起動時
 $ docker-compose up --build
-# 初回起動時のみ
-$ docker-compose exec web python manage.py migrate
+$ docker-compose exec web python manage.py
+
+# 2回目以降
+$ docker-compose up
 ```
