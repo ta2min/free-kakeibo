@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_cleanup',
     'bootstrap4',
     'rest_framework',
+    'drf_yasg',
     'djoser',
     'kakeibo',
     'api',
@@ -151,3 +152,13 @@ MEDIA_ROOT = '/var/www/{}/media'.format(PROJECT_NAME)
 
 # humanize.intcomma
 NUMBER_GROUPING = 3
+
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+      }
+   }
+}
