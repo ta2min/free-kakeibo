@@ -1,6 +1,6 @@
 # 家計簿アプリ
 
-#### デプロイ
+### デプロイ
 
 conohaのVPSにNginxでデプロイしています。
 
@@ -10,13 +10,13 @@ conohaのVPSにNginxでデプロイしています。
 
 パスワード:  &FZbMuTfx2G1
 
-#### 主な使用ライブラリ
+### 主な使用ライブラリ
 
 - Django
 - Django REST Framework
-- Siｍple JWT
+- Docker
 
-#### 機能
+### 機能
 
 - ユーザー認証
 - 一覧表示（ソート・検索機能付き）
@@ -24,16 +24,18 @@ conohaのVPSにNginxでデプロイしています。
 - 支出・収入のCRUD
 - 月次支出/収入カテゴリ別割合
 - カテゴリ別金額推移
+- 家族グループ機能
 - ユニットテスト
   - 少ししか書けてない
-- API機能
-  - [ドキュメント](https://github.com/ta2min/free-kakeibo/wiki)
-- JWT認証
+- API([ドキュメント](https://kakeibo.ta2milab.com/api/documents/))
+  - JWT認証
+  - swaggerでAPIドキュメントを生成した
 
-#### 課題点・反省点
 
-- 使ったことのないライブラリや実装したことのない機能が多く1つの機能を付けるのに時間がかかった。
-- テストコードを書いたことがなくやりたいテストを書くことができなかかった
-- モデルにuuidを使ってないのでAPIで他人のデータを書き換えることが簡単にできる
-- APIのカテゴリ登録で、ユーザー名が必要な点
-  - JWT認証しているので、そこからユーザ名を持ってくることができる。しかし、ユーザ名とカテゴリ名のユニーク制約のバリデーションよりも遅いのでエラーが出てしまう。
+### 開発環境構築
+
+``` shell
+$ docker-compose up --build
+# 初回起動時のみ
+$ docker-compose exec web python manage.py migrate
+```
